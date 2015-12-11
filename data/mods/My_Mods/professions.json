@@ -27,12 +27,18 @@
                 "name": "swimming"
             }
         ],
+        "traits": [
+            "ADRENALINE",
+            "MYOPIC",
+            "ROBUST"
+        ],
         "items": {
             "both": [
                 "longshirt",
                 "jeans",
                 "socks",
                 "sneakers",
+                "glasses_eye",
                 "mbag",
                 "laptop",
                 "pda",
