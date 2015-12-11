@@ -1,0 +1,45 @@
+[
+    {
+        "type": "profession",
+        "ident": "ordinary_guy",
+        "name": "Ordinary Guy",
+        "description": "Just your average Joe.",
+        "points": 0,
+        "skills": [
+            {
+                "level": 2,
+                "name": "barter"
+            },
+            {
+                "level": 3,
+                "name": "computer"
+            },
+            {
+                "level": 3,
+                "name": "driving"
+            },
+            {
+                "level": 3,
+                "name": "speech"
+            },
+            {
+                "level": 3,
+                "name": "swimming"
+            }
+        ],
+        "items": {
+            "both": [
+                "longshirt",
+                "jeans",
+                "socks",
+                "sneakers",
+                "mbag",
+                "laptop",
+                "pda",
+                "aspirin",
+                "caffeine",
+                "chaw"
+            ]
+        }
+    }
+]
