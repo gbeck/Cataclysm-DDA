@@ -2,15 +2,16 @@
 #define LUA_CONSOLE_H
 
 #include "output.h"
-#include "input.h"
 #include "cursesdef.h"
 
-#include <map>
 #include <string>
 #include <vector>
 #include <utility>
 
-class lua_console {
+typedef int nc_color;
+
+class lua_console
+{
     public:
         lua_console();
         ~lua_console();
@@ -36,12 +37,6 @@ class lua_console {
         void quit();
         void scroll_up();
         void scroll_down();
-
-        std::map<long, std::function<void()>> callbacks {
-            {KEY_ESCAPE, [this](){ this->quit(); }},
-            {KEY_NPAGE, [this](){ this->scroll_up(); }},
-            {KEY_PPAGE, [this](){ this->scroll_down(); }}
-        };
 };
 
 #endif // LUA_CONSOLE_H
