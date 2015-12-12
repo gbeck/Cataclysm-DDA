@@ -2,8 +2,12 @@
 
 #include "catalua.h"
 #include "catacharset.h"
+#include "input.h"
 
-lua_console::lua_console() : cWin( newwin( lines, width, 0, 0 ) ), iWin( newwin( 1, width,lines, 0 ) )
+#include <map>
+
+lua_console::lua_console() : cWin( newwin( lines, width, 0, 0 ) ),
+    iWin( newwin( 1, width, lines, 0 ) )
 {
 }
 
@@ -19,7 +23,12 @@ std::string lua_console::get_input()
 {
     long key = 0;
     int pos = -1;
-    return string_input_win( iWin, "", width, 0, 0, width, true, key, pos, "LUA", 0, lines, true, false, callbacks );
+    std::map<long, std::function<void()>> callbacks {
+        { KEY_ESCAPE, [this]() { this->quit(); } },
+        { KEY_NPAGE, [this]() { this->scroll_up(); } },
+        { KEY_PPAGE, [this]() { this->scroll_down(); } } };
+    return string_input_win( iWin, "", width, 0, 0, width, true, key, pos,
+                             "LUA", 0, lines, true, false, callbacks );
 }
 
 void lua_console::draw()
@@ -43,7 +52,7 @@ void lua_console::quit()
 
 void lua_console::scroll_down()
 {
-    scroll = std::min( std::max( ((int) text_stack.size()) - lines, 0 ), scroll + 1 );
+    scroll = std::min( std::max( ( ( int ) text_stack.size() ) - lines, 0 ), scroll + 1 );
     draw();
 }
 
@@ -57,8 +66,8 @@ void lua_console::read_stream( std::stringstream &stream, nc_color text_color )
 {
     std::string line;
     while( std::getline( stream, line ) ) {
-        for( auto str : foldstring(line, width) ) {
-            text_stack.push_back({str, text_color});
+        for( auto str : foldstring( line, width ) ) {
+            text_stack.push_back( {str, text_color} );
         }
     }
     stream.str( std::string() ); // empty the buffer
