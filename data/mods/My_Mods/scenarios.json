@@ -8,6 +8,16 @@
     "allowed_locs": ["cabin"],
     "start_name": "Lonely Cabin",
     "professions" : ["ordinary_guy"]
+  },
   {
+    "type": "scenario",
+    "ident": "winter_cabin",
+    "name": "Winter Cabin",
+    "points" : 0,
+    "description": "You take shelter from the freezing winter weather in an old cabin.",
+    "allowed_locs": ["cabin"],
+    "start_name": "Freezing Cabin",
+    "professions" : ["ordinary_guy"],
+    "flags" : ["WIN_START"]
   }
 ]
