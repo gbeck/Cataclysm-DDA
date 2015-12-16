@@ -19,5 +19,15 @@
     "start_name": "Freezing Cabin",
     "professions" : ["ordinary_guy"],
     "flags" : ["WIN_START"]
+  },
+  {
+    "type": "scenario",
+    "ident": "quiet_hours",
+    "name": "Quiet Hours",
+    "points" : 0,
+    "description": "You're deep in research in the library when you hear strange sounds outside.",
+    "allowed_locs": ["s_library"],
+    "start_name": "Library",
+    "professions" : ["ordinary_guy"]
   }
 ]
