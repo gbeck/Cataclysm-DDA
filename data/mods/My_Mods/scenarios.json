@@ -7,7 +7,7 @@
     "description": "You are lost in the woods, freezing and without supplies, when you stumble across a small cabin.",
     "allowed_locs": ["cabin"],
     "start_name": "Lonely Cabin",
-    "flags" : ["WIN_START"],
     "professions" : ["ordinary_guy"]
+  {
   }
 ]
