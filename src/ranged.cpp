@@ -33,6 +33,7 @@ const skill_id skill_gun( "gun" );
 const skill_id skill_melee( "melee" );
 
 int time_to_fire(player &p, const itype &firing);
+static inline void eject_casing( player& p, item& weap );
 int recoil_add(player &p, const item &gun);
 void make_gun_sound_effect(player &p, bool burst, item *weapon);
 extern bool is_valid_in_w_terrain(int, int);
@@ -458,23 +459,6 @@ void player::fire_gun( const tripoint &targ_arg, bool burst )
         add_msg_if_player(m_info, _("You'll need a more accurate gun to keep improving your aim."));
     }
 
-    // chance to disarm an NPC with a whip if skill is high enough
-    ///\EFFECT_MELEE >5 allows disarming with a whip
-    if(proj.proj_effects.count("WHIP") && (this->skillLevel( skill_melee ) > 5) && one_in(3)) {
-        int npcdex = g->npc_at(targ_arg);
-        if(npcdex != -1) {
-            npc *p = g->active_npc[npcdex];
-            if(!p->weapon.is_null()) {
-                item weap = p->remove_weapon();
-                add_msg_if_player(m_good, _("You disarm %1$s's %2$s using your whip!"), p->name.c_str(),
-                                  weap.tname().c_str());
-                // Can probably send a weapon through a wall
-                tripoint random_point( targ_arg.x + rng(-1, 1), targ_arg.y + rng(-1, 1), targ_arg.z );
-                g->m.add_item_or_charges(random_point, weap);
-            }
-        }
-    }
-
     tripoint targ = targ_arg;
     const bool trigger_happy = has_trait( "TRIGGERHAPPY" );
     for (int curshot = 0; curshot < num_shots; curshot++) {
@@ -517,33 +501,7 @@ void player::fire_gun( const tripoint &targ_arg, bool burst )
             }
         }
 
-        // Drop a shell casing if appropriate.
-        itype_id casing_type = curammo->ammo->casing;
-        if( casing_type != "NULL" && !casing_type.empty() ) {
-            if( used_weapon->has_flag("RELOAD_EJECT") ) {
-                const int num_casings = used_weapon->get_var( "CASINGS", 0 );
-                used_weapon->set_var( "CASINGS", num_casings + 1 );
-            } else {
-                item casing;
-                casing.make(casing_type);
-                // Casing needs a charges of 1 to stack properly with other casings.
-                casing.charges = 1;
-                if( used_weapon->has_gunmod("brass_catcher") != -1 ) {
-                    i_add( casing );
-                } else {
-                    tripoint brass = pos();
-                    int count = 0;
-                    do {
-                        brass.x = posx() + rng( -1, 1 );
-                        brass.y = posy() + rng( -1, 1 );
-                        count++;
-                        // Try not to drop the casing on a wall if at all possible.
-                    } while( g->m.move_cost( brass ) == 0 && count < 10 );
-                    g->m.add_item_or_charges(brass, casing);
-                    sfx::play_variant_sound( "fire_gun", "brass_eject", sfx::get_heard_volume( brass ), sfx::get_heard_angle( brass ));
-                }
-            }
-        }
+        eject_casing( *this, *used_weapon );
 
         if( used_weapon->has_flag("BIO_WEAPON") ) {
             // Consume a (virtual) charge to let player::activate_bionic know the weapon has been fired.
@@ -1284,6 +1242,40 @@ int time_to_fire(player &p, const itype &firingt)
     return std::max(info.min_time, info.base - info.reduction * p.skillLevel( skill_used ));
 }
 
+static inline void eject_casing( player& p, item& weap ) {
+    itype_id casing_type = weap.get_curammo()->ammo->casing;
+    if( casing_type == "NULL" || casing_type.empty() ) {
+        return;
+    }
+
+    if( weap.has_flag( "RELOAD_EJECT" ) ) {
+        const int num_casings = weap.get_var( "CASINGS", 0 );
+        weap.set_var( "CASINGS", num_casings + 1 );
+        return;
+    }
+
+    item casing( casing_type, calendar::turn, false );
+    casing.charges = 1; // needs charge 1 to stack properly with other casings
+
+    if( weap.has_gunmod( "brass_catcher" ) != -1 ) {
+        p.i_add( casing );
+        return;
+    }
+
+    // Eject casing in random direction avoiding walls using player position as fallback
+    auto brass = closest_tripoints_first( 1, p.pos() );
+    brass.erase( brass.begin() );
+    std::random_shuffle( brass.begin(), brass.end() );
+    brass.emplace_back( p.pos() );
+
+    for( auto& pos : brass ) {
+        if ( g->m.move_cost(pos) != 0 ) {
+            g->m.add_item_or_charges( pos, casing );
+            sfx::play_variant_sound( "fire_gun", "brass_eject", sfx::get_heard_volume( pos ), sfx::get_heard_angle( pos ) );
+            break;
+        }
+    }
+}
 
 void make_gun_sound_effect(player &p, bool burst, item *weapon)
 {
