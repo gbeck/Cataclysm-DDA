@@ -47,5 +47,76 @@
                 "chaw"
             ]
         }
+    },
+    {
+        "type": "profession",
+        "ident": "chimera",
+        "name": "Chimera",
+        "description": "Chimera mutant.",
+        "points": 0,
+        "skills": [
+            {
+                "level": 2,
+                "name": "barter"
+            },
+            {
+                "level": 3,
+                "name": "computer"
+            },
+            {
+                "level": 3,
+                "name": "driving"
+            },
+            {
+                "level": 3,
+                "name": "speech"
+            },
+            {
+                "level": 3,
+                "name": "swimming"
+            }
+        ],
+        "traits": [
+            "ACIDBLOOD",
+            "ACIDPROOF",
+            "ADRENALINE",
+            "BADTEMPER",
+            "CANINE_EARS",
+            "CARNIVORE",
+            "CHAOTIC",
+            "CHEMIMBALANCE",
+            "DEFORMED3",
+            "DEX_UP_2",
+            "EATDEAD",
+            "EATHEALTH",
+            "EATPOISON",
+            "HOOVES",
+            "HORNS_CURLED",
+            "HUNGER3",
+            "MOUTH_FLAPS",
+            "MUT_TOUGH2",
+            "NIGHTVISION2",
+            "PARAIMMUNE",
+            "PER_UP_2",
+            "PRED4",
+            "QUICK",
+            "ROT2",
+            "SABER_TEETH",
+            "SAPIOVORE",
+            "SAPROVORE",
+            "SCALES",
+            "SHOUT3",
+            "SLEEPY",
+            "SMELLY2",
+            "SNARL",
+            "STR_UP_3",
+            "TAIL_CLUB",
+            "TALONS",
+            "TERRIFYING",
+            "THICKSKIN",
+            "THIRST",
+            "THRESH_CHIMERA",
+            "UNSTABLE"
+        ]
     }
 ]
